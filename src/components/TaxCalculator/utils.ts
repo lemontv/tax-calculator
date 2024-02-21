@@ -1,13 +1,6 @@
 import { Bracket, TaxBand } from "@/types";
 
-export const getcalculatedBrackets = (taxBrackets: Bracket[]): Bracket[] => {
-  // Shadow copy the tax bracktes array
-  const sortedTaxBrackets = [...taxBrackets];
-  // Sort the tax brackets array
-  sortedTaxBrackets.sort((a, b) => a.min - b.min);
-
-  return sortedTaxBrackets;
-};
+export const sortByMin = (a: Bracket, b: Bracket) => a.min - b.min;
 
 export const calculateOwedTaxes = (taxBands: TaxBand[]) =>
   taxBands.reduce((sum, band) => sum + band.tax, 0);

@@ -1,80 +1,42 @@
-import React, { useMemo, useState } from "react";
-import { Input } from "@/components/Input";
-import { Button } from "@/components/Button";
-import { getTaxBrackets } from "@/apis/getTaxBrackets";
+import { useState } from "react";
 
-import {
-  calculateOwedTaxes,
-  calculateTaxBands,
-  getcalculatedBrackets,
-} from "./utils";
+import { TaxSummary } from "./TaxSummary";
+import { TaxCalculatorForm } from "./TaxCalculatorForm";
+import { useTaxCalculator } from "./useTaxCalculator";
+import { TaxInfo } from "./types";
 
 export const TaxCalculator = () => {
-  const [taxableIncome, setTaxableIncome] = useState<string>("");
-  const [taxYear, setTaxYear] = useState<string>("");
-  const [isLoading, setLoading] = useState(false);
+  const [taxInfo, setTaxInfo] = useState<TaxInfo | null>(null);
+  const { isLoading, getTaxBands } = useTaxCalculator();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const funcMap = useMemo(() => {
-    return new Map([
-      ["taxableIncome", setTaxableIncome],
-      ["taxYear", setTaxYear],
-    ]);
-  }, []);
-
-  // @TODO move to a util function
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    const updateField = funcMap.get(name);
-    if (!updateField) return;
-    updateField(value);
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Prevent default form submit event
-    event.preventDefault();
-
+  const handleSubmit = async (taxableIncome: string, taxYear: string) => {
     if (isLoading) return;
-    setLoading(true);
+
+    // Clean error message
+    setErrorMsg(null);
+
+    // Clean tax info
+    setTaxInfo(null);
+
+    if (!taxableIncome || !taxYear) {
+      return;
+    }
 
     try {
-      const taxBrackets = await getTaxBrackets(taxYear);
-      const calculatedBrackets = getcalculatedBrackets(
-        taxBrackets.tax_brackets
-      );
-
-      const parsedTaxabledIncome = parseFloat(taxableIncome);
-
-      const taxBands = calculateTaxBands(
-        parsedTaxabledIncome,
-        calculatedBrackets
-      );
-
-      const owedTax = calculateOwedTaxes(taxBands);
-
-      console.log(taxBands, owedTax);
-    } finally {
-      setLoading(false);
+      const taxBands = await getTaxBands(parseFloat(taxableIncome), taxYear);
+      setTaxInfo({ taxBands, taxYear, taxableIncome });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      setErrorMsg(message);
+      console.error(error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Input
-        label="Taxable Income"
-        type="number"
-        name="taxableIncome"
-        value={taxableIncome}
-        onChange={handleChange}
-      />
-      <Input
-        label="Tax Year"
-        type="number"
-        name="taxYear"
-        value={taxYear}
-        onChange={handleChange}
-      />
-      <Button type="submit">calculate</Button>
-      <Button type="reset">Reset</Button>
-    </form>
+    <div>
+      <TaxCalculatorForm onSubmit={handleSubmit} />
+      <TaxSummary taxInfo={taxInfo} errorMsg={errorMsg} />
+    </div>
   );
 };

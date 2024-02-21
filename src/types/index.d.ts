@@ -14,3 +14,13 @@ export interface TaxBand {
 export interface TaxBracketsResponse {
   tax_brackets: Bracket[];
 }
+
+export interface ErrorMsg {
+  code: string;
+  field: string;
+  message: string;
+}
+
+export interface ErrorResponse {
+  errors: ErrorMsg[];
+}
