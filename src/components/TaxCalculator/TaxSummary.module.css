@@ -1,0 +1,9 @@
+.summary {
+  margin-top: var(--spacing);
+}
+
+.summaryDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing / 2);
+}

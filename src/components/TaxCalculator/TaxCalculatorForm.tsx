@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 
+import styles from "./TaxCalculatorForm.module.css";
+
 interface Props {
   onSubmit: (taxableIncome: string, taxYear: string) => Promise<void>;
 }
@@ -54,7 +56,7 @@ export const TaxCalculatorForm: React.FC<Props> = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} onReset={handleReset}>
+    <form className={styles.form} onSubmit={handleSubmit} onReset={handleReset}>
       <Input
         label="Taxable Income"
         type="number"
@@ -69,12 +71,14 @@ export const TaxCalculatorForm: React.FC<Props> = ({ onSubmit }) => {
         value={taxYear}
         onChange={handleChange}
       />
-      <Button disabled={isLoading} type="submit">
-        calculate
-      </Button>
-      <Button disabled={isLoading} type="reset">
-        Reset
-      </Button>
+      <div className={styles.actions}>
+        <Button disabled={isLoading} type="submit">
+          Calculate
+        </Button>
+        <Button disabled={isLoading} type="reset">
+          Reset
+        </Button>
+      </div>
     </form>
   );
 };

@@ -1,0 +1,8 @@
+body {
+  color: #333333;
+
+  --primary-color: blue;
+  --border-raidus: 4px;
+  --border-color: #cccccc;
+  --spacing: 8px;
+}

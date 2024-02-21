@@ -1,12 +1,13 @@
 import { TaxBand } from "@/types";
 import React from "react";
+import styles from "./TaxBreakdown.module.css";
 
 interface Props {
   taxBands: TaxBand[];
 }
 
 export const TaxBreakdown: React.FC<Props> = ({ taxBands }) => (
-  <table>
+  <table className={styles.table}>
     <thead>
       <tr>
         <th>min</th>

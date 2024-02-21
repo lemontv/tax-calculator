@@ -4,6 +4,7 @@ import { TaxSummary } from "./TaxSummary";
 import { TaxCalculatorForm } from "./TaxCalculatorForm";
 import { useTaxCalculator } from "./useTaxCalculator";
 import { TaxInfo } from "./types";
+import styles from "./TaxCaculator.module.css";
 
 export const TaxCalculator = () => {
   const [taxInfo, setTaxInfo] = useState<TaxInfo | null>(null);
@@ -34,7 +35,7 @@ export const TaxCalculator = () => {
   };
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <TaxCalculatorForm onSubmit={handleSubmit} />
       <TaxSummary taxInfo={taxInfo} errorMsg={errorMsg} />
     </div>
