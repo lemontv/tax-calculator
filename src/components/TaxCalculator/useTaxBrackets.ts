@@ -1,20 +1,20 @@
 import { useState, useMemo } from "react";
 import { Bracket } from "@/types";
-import { getTaxBrackets } from "@/apis/getTaxBrackets";
+import { getTaxBracketsApi } from "@/apis/getTaxBrackets";
 
-import { calculateTaxBands, sortByMin } from "./utils";
+import { sortByMin } from "./utils";
 
-export const useTaxCalculator = () => {
+export const useTaxBrackets = () => {
   const taxBracketMap = useMemo(() => new Map<string, Bracket[]>(), []);
   const [isLoading, setLoading] = useState(false);
 
-  const getTaxBands = async (taxableIncome: number, taxYear: string) => {
+  const getTaxBrackets = async (taxYear: string) => {
     let taxBrackets: Bracket[] = [];
 
     if (!taxBracketMap.has(taxYear)) {
       try {
         setLoading(true);
-        const response = await getTaxBrackets(taxYear);
+        const response = await getTaxBracketsApi(taxYear);
 
         taxBrackets = response.tax_brackets;
         taxBrackets.sort(sortByMin);
@@ -26,13 +26,11 @@ export const useTaxCalculator = () => {
       taxBrackets = taxBracketMap.get(taxYear)!;
     }
 
-    const taxBands = calculateTaxBands(taxableIncome, taxBrackets);
-
-    return taxBands;
+    return taxBrackets;
   };
 
   return {
-    getTaxBands,
+    getTaxBrackets,
     isLoading,
   };
 };

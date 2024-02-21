@@ -1,7 +1,7 @@
-import { TaxBand } from "@/types";
+import { Bracket } from "@/types";
 
 export interface TaxInfo {
-  taxBands: TaxBand[];
+  taxBrackets: Bracket[];
   taxYear: string;
   taxableIncome: string;
 }

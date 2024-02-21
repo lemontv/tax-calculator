@@ -5,8 +5,18 @@ export const sortByMin = (a: Bracket, b: Bracket) => a.min - b.min;
 export const calculateOwedTaxes = (taxBands: TaxBand[]) =>
   taxBands.reduce((sum, band) => sum + band.tax, 0);
 
-export const calculateEffectiveRate = (taxBands: TaxBand[]) =>
-  taxBands.length ? taxBands[taxBands.length - 1].rate : 0;
+export const calculateEffectiveRate = (
+  taxableIncome: number | string,
+  totalTaxes: number
+) => {
+  const income =
+    typeof taxableIncome === "string"
+      ? parseFloat(taxableIncome)
+      : taxableIncome;
+  const effectiveRate = income !== 0 ? totalTaxes / income : 0;
+
+  return effectiveRate;
+};
 
 export const calculateTaxBands = (
   taxableIncome: number,

@@ -1,7 +1,13 @@
 import React from "react";
 import { ErrorMsg } from "@/components/ErrorMsg";
+import { formatCurrency, formatPercentage } from "@/helpers/formatter";
+
 import { TaxBreakdown } from "./TaxBreakdown";
-import { calculateEffectiveRate, calculateOwedTaxes } from "./utils";
+import {
+  calculateEffectiveRate,
+  calculateOwedTaxes,
+  calculateTaxBands,
+} from "./utils";
 import { TaxInfo } from "./types";
 import styles from "./TaxSummary.module.css";
 
@@ -25,18 +31,23 @@ export const TaxSummary: React.FC<Props> = ({ taxInfo, errorMsg }) => {
   if (errorMsg) return <ErrorMsg>{errorMsg}</ErrorMsg>;
 
   if (!taxInfo) return null;
-  const { taxYear, taxableIncome, taxBands } = taxInfo;
+  const { taxYear, taxableIncome, taxBrackets } = taxInfo;
 
-  const owedTaxes = calculateOwedTaxes(taxBands);
-  const effectiveRate = calculateEffectiveRate(taxBands);
+  const income = parseFloat(taxableIncome);
+  const taxBands = calculateTaxBands(income, taxBrackets);
+  const totalTaxes = calculateOwedTaxes(taxBands);
+  const effectiveRate = calculateEffectiveRate(income, totalTaxes);
 
   return (
     <div className={styles.summary}>
       <div className={styles.summaryDetails}>
         <TaxDetail label="Tax year" value={taxYear} />
-        <TaxDetail label="Taxable income" value={taxableIncome} />
-        <TaxDetail label="Owed taxes" value={owedTaxes} />
-        <TaxDetail label="Effective rate" value={effectiveRate} />
+        <TaxDetail label="Taxable income" value={formatCurrency(income)} />
+        <TaxDetail label="Total taxes" value={formatCurrency(totalTaxes)} />
+        <TaxDetail
+          label="Effective rate"
+          value={formatPercentage(effectiveRate)}
+        />
       </div>
       <TaxBreakdown taxBands={taxBands} />
     </div>
