@@ -1,5 +1,4 @@
 import React from "react";
-import { ErrorMsg } from "@/components/ErrorMsg";
 import { formatCurrency, formatPercentage } from "@/helpers/formatter";
 
 import { TaxBreakdown } from "./TaxBreakdown";
@@ -24,12 +23,9 @@ export const TaxDetail: React.FC<TaxDetailProps> = ({ label, value }) => (
 
 interface Props {
   taxInfo: TaxInfo | null;
-  errorMsg: string | null;
 }
 
-export const TaxSummary: React.FC<Props> = ({ taxInfo, errorMsg }) => {
-  if (errorMsg) return <ErrorMsg>{errorMsg}</ErrorMsg>;
-
+export const TaxSummary: React.FC<Props> = ({ taxInfo }) => {
   if (!taxInfo) return null;
   const { taxYear, taxableIncome, taxBrackets } = taxInfo;
 

@@ -9,11 +9,9 @@ export const getApiUrl = (path: string, base = BASE_API_URL) => {
 
 export const get = <T extends object>(url: string): Promise<T> => {
   return fetch(url)
-    .then((res) => {
-      return res.json();
-    })
+    .then((res) => res.json())
     .then((json: T | ErrorResponse) => {
-      if ("errors" in json) throw new Error(json.errors[0].message);
+      if ("errors" in json) throw json.errors;
       return json;
     });
 };

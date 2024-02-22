@@ -33,15 +33,10 @@ export const TaxCalculatorForm: React.FC<Props> = ({ onSubmit }) => {
     event.preventDefault();
 
     if (isLoading) return;
-    setLoading(true);
 
-    try {
-      await onSubmit(taxableIncome, taxYear);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    await onSubmit(taxableIncome, taxYear);
+    setLoading(false);
   };
 
   const handleReset = async (event: React.FormEvent<HTMLFormElement>) => {
