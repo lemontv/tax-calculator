@@ -1,5 +1,5 @@
 import { ErrorResponse } from "@/types";
-const BASE_API_URL = "http://192.168.0.128:5000";
+const BASE_API_URL = window._env_?.API_SERVER || "http://localhost";
 
 export const getApiUrl = (path: string, base = BASE_API_URL) => {
   const slash = path.charAt(0) !== "/" ? "/" : "";

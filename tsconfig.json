@@ -25,6 +25,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "@types", "jest.config.ts", "setupJest.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

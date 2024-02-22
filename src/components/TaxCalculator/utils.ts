@@ -22,19 +22,17 @@ export const calculateTaxBands = (
   taxableIncome: number,
   brackets: Bracket[]
 ): TaxBand[] => {
-  const filteredBackets = brackets.filter(
-    (bracket) => bracket.min < taxableIncome
-  );
+  return brackets
+    .filter((bracket) => bracket.min < taxableIncome) // Filter out the brackets which can apply the tax rate
+    .map(({ min, max, rate }, index, filtered) => {
+      // Caculate each level tax rates, the last one will be the taxable income
+      const tax = ((filtered[index + 1]?.min || taxableIncome) - min) * rate;
 
-  return filteredBackets.map(({ min, max, rate }, index) => {
-    const tax =
-      ((filteredBackets[index + 1]?.min || taxableIncome) - min) * rate;
-
-    return {
-      min,
-      max: !max || max > taxableIncome ? taxableIncome : max,
-      rate,
-      tax,
-    };
-  });
+      return {
+        min,
+        max: !max || max > taxableIncome ? taxableIncome : max,
+        rate,
+        tax,
+      };
+    });
 };

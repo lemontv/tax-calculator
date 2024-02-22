@@ -1,0 +1,15 @@
+version: "3"
+services:
+  api-server:
+    image: ptsdocker16/interview-test-server
+    restart: always
+    ports:
+      - 5000:5000
+  webapp:
+    build:
+      context: ./
+    restart: always
+    ports:
+      - 3000:80
+    environment:
+      API_SERVER: ${API_SERVER}
